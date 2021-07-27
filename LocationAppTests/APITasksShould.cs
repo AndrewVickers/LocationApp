@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using LocationAppTasks;
 using LocationAppTasks.Models;
 using LocationAppTasks.Tasks;
 using Moq;
@@ -15,7 +10,6 @@ namespace LocationAppTests
     public class APITasksShould
     {
         private readonly IApi _sut;
-        private Mock<HttpClient> _mockHttpClient;
         private readonly IList<User> _userList;
         private readonly User _actualLondonUser;
         private readonly User _registeredLondonUser;
@@ -23,8 +17,6 @@ namespace LocationAppTests
         public APITasksShould()
         {
             _sut = new Api();
-            _mockHttpClient = new Mock<HttpClient>();
-
             _registeredLondonUser =
                 new User()
                 {
@@ -81,24 +73,42 @@ namespace LocationAppTests
 
         }
 
+        /// <summary>
+        /// Sanity check that it returns something. If test fails then data on remote system is to blame
+        /// </summary>
         [Fact]
-        public void ReturnUsersRegisteredInCity()
+        public void CallCityAPIWhenValidCityIsSpecified()
         {
-            var result = _sut.GetUsers("London");
-
-        }
-
-        [Fact]
-        public void CallCityAPIWhenCityIsSpecified()
-        {
-            var city = "city";
+            var city = "London";
             var response = _sut.GetUsers(city);
+
+            Assert.NotEmpty(response.Result);
+
         }
 
+        /// <summary>
+        /// Sanity check that it returns something. If test fails then data on remote system is to blame
+        /// </summary>
         [Fact]
-        public void CallUsersAPIWhenNoCityIsSpecified()
+        public void ReturnAListOfUsersWhenNoCityIsSpecified()
         {
+            var city = "London";
+            var response = _sut.GetUsers();
 
+            Assert.NotEmpty(response.Result);
+
+        }
+
+        /// <summary>
+        /// Sanity check that it returns something. If test fails then data on remote system is to blame
+        /// </summary>
+        [Fact]
+        public void CallUsersAPIWhenInvalidCityIsSpecified()
+        {
+            var city = "city x";
+            var response = _sut.GetUsers(city);
+
+            Assert.Empty(response.Result);
         }
     }
 }

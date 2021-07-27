@@ -6,18 +6,16 @@ namespace LocationAppTasks.Tasks
 {
     public interface ICalculations
     {
-        List<User> GetLondonUsers(IList<User> users, int radius);
+        IList<User> GetLondonUsers(IList<User> users, int radius);
     }
 
     public class Calculations : ICalculations
     {
-        public List<User> GetLondonUsers(IList<User> users, int radius)
+        public IList<User> GetLondonUsers(IList<User> users, int radius)
         {
             List<User> qualifyingUsers = new List<User>();
 
             Coordinate CentreOfLondon = new Coordinate(51.509865, -0.118092);
-
-            //var users = JsonConvert.DeserializeObject<List<User>>(responseBody);
 
             foreach (var user in users)
             {

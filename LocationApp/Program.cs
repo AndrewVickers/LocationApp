@@ -11,23 +11,10 @@ namespace LocationApp
     {
         static void Main(string[] args)
         {
-            Calculations calculations = new Calculations();
             Api api = new Api();
             Console.WriteLine("Please make your choice.  Enter either a city name, or enter a distance in miles to search from the centre of London: ");
             var input = Console.ReadLine();
-            var radius = 0;
-            var userList = new List<User>();
-
-            switch (int.TryParse(input, out radius))
-            {
-                case true:
-                    var response =  api.GetUsers().Result;
-                    userList = calculations.GetLondonUsers(response, radius);
-                    break;
-                default:
-                    userList = api.GetUsers(input).Result;
-                    break;
-            }
+            var userList = api.getUserList(input);
 
             foreach (var user in userList)
             {
