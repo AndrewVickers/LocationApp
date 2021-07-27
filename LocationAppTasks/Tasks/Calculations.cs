@@ -1,19 +1,17 @@
-﻿using Geolocation;
+﻿using System.Collections.Generic;
+using Geolocation;
 using LocationAppTasks.Models;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
-namespace LocationAppTasks
+namespace LocationAppTasks.Tasks
 {
     public interface ICalculations
     {
-        List<User> GetLondonUsers(List<User> users, int radius);
+        List<User> GetLondonUsers(IList<User> users, int radius);
     }
 
     public class Calculations : ICalculations
     {
-        public List<User> GetLondonUsers(List<User> users, int radius)
+        public List<User> GetLondonUsers(IList<User> users, int radius)
         {
             List<User> qualifyingUsers = new List<User>();
 
@@ -25,6 +23,7 @@ namespace LocationAppTasks
             {
                 Coordinate userLocation = new Coordinate(user.Latitude, user.Longitude);
                 double distance = GeoCalculator.GetDistance(CentreOfLondon, userLocation, 1);
+                user.Distance = distance;
                 if (distance <= radius)
                 {
                     qualifyingUsers.Add(user);

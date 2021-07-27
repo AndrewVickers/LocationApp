@@ -1,30 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using LocationAppTasks;
 using LocationAppTasks.Models;
 using LocationAppTasks.Tasks;
-using Moq;
 using Xunit;
 
 namespace LocationAppTests
 {
-    public class APITasksShould
+    public class CalculationTasksShould
     {
-        private readonly IApi _sut;
-        private Mock<HttpClient> _mockHttpClient;
+        private readonly ICalculations _sut;
         private readonly IList<User> _userList;
         private readonly User _actualLondonUser;
         private readonly User _registeredLondonUser;
 
-        public APITasksShould()
+        public CalculationTasksShould()
         {
-            _sut = new Api();
-            _mockHttpClient = new Mock<HttpClient>();
-
+            _sut = new Calculations();
             _registeredLondonUser =
                 new User()
                 {
@@ -82,23 +76,14 @@ namespace LocationAppTests
         }
 
         [Fact]
-        public void ReturnUsersRegisteredInCity()
+        public void ReturnUsersWithinSpecifiedRadius()
         {
-            var result = _sut.GetUsers("London");
+            var radius = 50;
+            var result = _sut.GetLondonUsers(_userList, radius);
 
-        }
-
-        [Fact]
-        public void CallCityAPIWhenCityIsSpecified()
-        {
-            var city = "city";
-            var response = _sut.GetUsers(city);
-        }
-
-        [Fact]
-        public void CallUsersAPIWhenNoCityIsSpecified()
-        {
-
+            Assert.Single(result);
+            Assert.Contains(_actualLondonUser, result);
+            Assert.DoesNotContain(_registeredLondonUser, result);
         }
     }
 }

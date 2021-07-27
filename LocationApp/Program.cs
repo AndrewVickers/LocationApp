@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using LocationAppTasks;
 using LocationAppTasks.Models;
+using LocationAppTasks.Tasks;
 
 namespace LocationApp
 {
@@ -10,8 +11,8 @@ namespace LocationApp
     {
         static void Main(string[] args)
         {
-            LocationAppTasks.Calculations calculations = new Calculations();
-            APITasks apiTasks = new APITasks();
+            Calculations calculations = new Calculations();
+            Api api = new Api();
             Console.WriteLine("Please make your choice.  Enter either a city name, or enter a distance in miles to search from the centre of London: ");
             var input = Console.ReadLine();
             var radius = 0;
@@ -20,17 +21,17 @@ namespace LocationApp
             switch (int.TryParse(input, out radius))
             {
                 case true:
-                    var response =  apiTasks.GetUsers().Result;
+                    var response =  api.GetUsers().Result;
                     userList = calculations.GetLondonUsers(response, radius);
                     break;
                 default:
-                    userList = apiTasks.GetUsers(input).Result;
+                    userList = api.GetUsers(input).Result;
                     break;
             }
 
             foreach (var user in userList)
             {
-                Console.WriteLine($"{user.FirstName} {user.LastName} {user.Latitude}, {user.Longitude}");
+                Console.WriteLine($"{user.FirstName} {user.LastName} Distance:{user.Distance} {user.Latitude}, {user.Longitude}");
             }
         }
     }
